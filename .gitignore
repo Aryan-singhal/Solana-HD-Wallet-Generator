@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+bun.lockb
+
+# build
+dist/
+build/
+
+# env
+.env
+
+# logs
+npm-debug.log*
+bun-debug.log*
+
+# OS
+.DS_Store
