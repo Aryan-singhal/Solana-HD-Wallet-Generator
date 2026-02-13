@@ -15,6 +15,9 @@ import { Input } from "../ui/input";
 function Pnemonics() {
     const [mnemonic, setmnemonic] = useState("");
     const [inputMnemonic, setInputMnemonic] = useState("");
+    const [loadingGen, setloadingGen] = useState(false);
+    const [loading, setloading] = useState(false);
+
     // const [key, setkey] = useState<string[]>([]);
     const [keys, setKeys] = useState<
         { index: number; publicKey: string; privateKey: string }[]
@@ -24,6 +27,7 @@ function Pnemonics() {
 
 
     async function fetchMnemonic() {
+        setloadingGen(true);
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/wallet/mnemonic`);
 
         if (!res.ok) {
@@ -33,10 +37,12 @@ function Pnemonics() {
         const data = await res.json();
         setmnemonic(data.mnemonic);
         clearWallets();
+        setloadingGen(false);
 
     }
 
     async function genPublicKey() {
+        setloading(true)
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/wallet/publickey`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -58,6 +64,7 @@ function Pnemonics() {
         ]);
 
         setIndex(i => i + 1);
+        setloading(false);
     }
 
     function clearWallets() {
@@ -108,7 +115,10 @@ function Pnemonics() {
                 </Button>
             </div>
 
-            <Button className="hover:cursor-pointer mx-3" onClick={() => { fetchMnemonic() }}>Generate New Mnemonic</Button>
+            <Button className="hover:cursor-pointer mx-3" onClick={() => { fetchMnemonic() }} disabled={loadingGen}>
+
+                {loadingGen ? "Generating..." : "Generate New Mnemonic"}
+            </Button>
 
             {mnemonic !== "" && (
                 <>
@@ -128,8 +138,8 @@ function Pnemonics() {
                     </Accordion>
 
                     <div className="flex">
-                        <Button className="ml-[30vw]" onClick={() => { genPublicKey() }}>Add Wallet</Button>
-                        <Button className="ml-3" onClick={() => { clearWallets() }}>Clear Wallets</Button>
+                        <Button className="ml-[30vw] hover:cursor-pointer" onClick={() => { genPublicKey() }} disabled={loading}>{loading ? "Adding..." : "Add Wallet"}</Button>
+                        <Button className="ml-3 hover:cursor-pointer" onClick={() => { clearWallets() }} disabled={loading}>Clear Wallets</Button>
                     </div>
 
                 </>
