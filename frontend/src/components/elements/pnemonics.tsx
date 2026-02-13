@@ -24,7 +24,7 @@ function Pnemonics() {
 
 
     async function fetchMnemonic() {
-        const res = await fetch("http://localhost:4000/api/wallet/mnemonic");
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/wallet/mnemonic`);
 
         if (!res.ok) {
             throw new Error("Failed to fetch mnemonic");
@@ -37,7 +37,7 @@ function Pnemonics() {
     }
 
     async function genPublicKey() {
-        const res = await fetch("http://localhost:4000/api/wallet/publickey", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/wallet/publickey`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
